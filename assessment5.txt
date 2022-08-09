@@ -1,0 +1,75 @@
+Q1) CREATE TABLE test_copy AS SELECT * FROM test;
+
+Q2) CREATE TABLE test_copy AS SELECT * FROM test WHERE 1=2;
+
+Q3) SELECT TOP 10 * FROM Student;
+    SELECT MIN(salary), MAX(salary) FROM Employee;
+
+Q4) CREATE TABLE transactions (
+    transaction_id INT,
+    user_id INT,
+    transaction_date DATE,
+    store_id INT,
+    payment_method VARCHAR(10),
+    amount FLOAT);
+
+    INSERT INTO transactions (transaction_id, user_id, transaction_date, store_id, payment_method, amount)
+    VALUES
+        (1, 1234, ‘2019–03–02’, 1, 'cash', 5.25),
+        (1, 1234, ‘2019–03–01’, 1, 'credit', 10.75),
+        (1, 1234, ‘2019–03–02’, 2, 'cash', 25.50);
+
+    _BASIC_STATS_TEMPLATE = '''
+    	SELECT {{ dim | sqlsafe }},
+    	COUNT(*) AS num_transactions,
+    	SUM(amount) AS total_amount,
+    	AVG(amount) AS avg_amount
+    	FROM transactions GROUP BY {{ dim | sqlsafe }} ORDER BY total_amount DESC
+    '''
+
+    params = {'dim': 'payment_method'}
+    sql = apply_sql_template(_BASIC_STATS_TEMPLATE, params)
+
+Q5) SELECT * FROM Student WHERE firstname LIKE 'P%' AND surname LIKE 'S%';
+
+Q6) SELECT TOP 1 * FROM Student;
+
+Q7) Let the following table be the sample data:
+
+ID	Name		Scored		Maximum
+1	Arihant		48		50
+2	Siddhant	44		50
+3	Juhi		37		50
+4	Manas		41		50
+5	Shivang		23		50
+
+Table name: Marks
+
+    WITH MarksCTE (ID, Name, Percentage) AS
+    (SELECT ID, Name, (CAST(Scored AS FLOAT)/(CAST(Maximum AS FLOAT)*100) AS Percentage From Marks)
+    SELECT * FROM MarksCTE;
+
+OUTPUT: 
+
+ID	Name		Percentage
+1	Arihant		96
+2	Siddhant	88
+3	Juhi		74
+4	Manas		82
+5	Shivang		46
+
+Q8) Trigger update example:
+
+    CREATE TRIGGER tr_student ON university
+    AFTER UPDATE AS  
+    SELECT * FROM university
+    WHERE id=5;
+
+    UPDATE university 
+    SET firstname='Jane'
+    WHERE id=5;
+
+
+    Delete event example:
+
+    DROP EVENT IF EXIST test_1;
